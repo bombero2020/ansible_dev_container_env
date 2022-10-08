@@ -1,0 +1,11 @@
+- name: playbook to test my env
+  hosts: localhost
+
+  tasks:
+    - name: debug hello
+      debug:
+        msg: "{{ ansible_facts }}"
+
+    - name: debug hello
+      debug:
+        msg: "Hola Marcelo"

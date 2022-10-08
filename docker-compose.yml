@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+  ansible_dev_container:
+    build: .
+    volumes:
+      - .:/ansible
+    command: "sleep infinity"
+
+volumes:
+  project_data:
