@@ -8,4 +8,7 @@
 
     - name: debug hello
       debug:
-        msg: "Hola Marcelo"
+        msg: "Hola desde el Contenedor {{ ansible_facts.hostname }}"
+
+# command
+# ansible-playbook test_play.yml -v
