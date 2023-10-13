@@ -2,10 +2,12 @@ version: "3"
 
 services:
   ansible_dev_container:
-    build: .
+    # build: .
+    image: quay.io/ansible/ansible-runner
     volumes:
-      - .:/ansible
+      - .:/home/runner
     command: "sleep infinity"
+    working_dir: /home/runner
 
 volumes:
   project_data:

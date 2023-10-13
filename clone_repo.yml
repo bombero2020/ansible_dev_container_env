@@ -1,0 +1,16 @@
+- name: playbook to clone a repo
+  hosts: all
+
+  tasks:
+    - name: Assert input variables
+      assert:
+        that: 
+          - repo_name is defined
+          - remote_dir is defined
+
+    - name: debug repo_name
+      debug:
+        msg: "{{ repo_name }} -- {{ remote_dir }}"
+
+# command
+# ansible-playbook clone_repo.yml -i inventory/inventory.ini -l raspi1 -e @vars.yml -v

@@ -1,0 +1,14 @@
+- name: playbook to test my env
+  hosts: all
+
+  tasks:
+    - name: debug hello
+      debug:
+        msg: "{{ ansible_facts }}"
+
+    - name: debug hello
+      debug:
+        msg: "Hola desde el Contenedor {{ ansible_facts.hostname }}"
+
+# command
+# ansible-playbook raspi_config.yml -v
