@@ -1,0 +1,80 @@
+- name: playbook to install samba on centos9
+  hosts: all
+
+  tasks:
+    # - name: debug hello
+    #   debug:
+    #     msg: "{{ ansible_facts }}"
+
+    - name: Assert is centos9
+      assert:
+        that:
+          - ansible_facts.distribution == "CentOS"
+          - ansible_facts.distribution_version == "9"
+        success_msg: "Ok it is a centos9"
+        fail_msg: ":( it is NOT a centos9"
+    
+    - name: Install samba samba-client samba-common
+      ansible.builtin.package:
+        name: 
+          - samba
+          - samba-client
+          - samba-common
+        state: present
+      become: true
+
+    - name: Copy file smb.conf smb.conf.bkp
+      ansible.builtin.copy:
+        src: /etc/samba/smb.conf
+        dest: /etc/samba/smb.conf.bkp
+        remote_src: true
+      become: true
+
+    - name: Update /etc/samba/smb.conf
+      ansible.builtin.blockinfile:
+        path: /etc/samba/smb.conf
+        block: |
+          [Anonymous]
+          path = /samba/anonymous
+          browsable =yes
+          writable = yes
+          guest ok = yes
+          read only = No
+          # end of anonymous
+      become: true
+
+    - name: Create /samba/anonymous directory if it does not exist
+      ansible.builtin.file:
+        path: /samba/anonymous
+        state: directory
+        mode: '0755'
+        recurse: yes
+        owner: nobody
+        group: nobody
+        setype: samba_share_t
+      become: true
+
+    - name: Start service smb and nmb, if not started
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: restarted
+      become: true
+      loop:
+        - smb
+        - nmb
+
+    # - name: Add service samba on firewall-cmd
+    #   ansible.posix.firewalld:
+    #     service: samba
+    #     permanent: true
+    #     zone: public
+    #     state: enabled
+    #   become: true
+
+    # firewall-cmd --permanent --zone=public --add-service=samba
+    # firewall-cmd --reload
+    # smbpasswd -a marizaga
+    # crear las subcarpetas con el usuario marizaga
+
+# command
+# ansible-playbook install_samba.yml -i inventory/inventory.ini -l centos9 -v

@@ -1,2 +1,5 @@
 repo_name: "https://github.com/bombero2020/ansible_dev_container_env.git"
 remote_dir: "/temp"
+ansible_ssh_user: pi 
+ansible_ssh_pass: "{{ lookup('env', 'ANSIBLE_SSH_PASS')}}"
+ansible_become_pass: "{{ lookup('env', 'ANSIBLE_BECOME_SSH_PASS')}}"
